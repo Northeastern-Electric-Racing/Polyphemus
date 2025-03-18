@@ -158,10 +158,14 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
-  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.HSEState = RCC_HSE_BYPASS;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_OscInitStruct.PLL.PLLM = 4;
+  RCC_OscInitStruct.PLL.PLLN = 84;
+  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
+  RCC_OscInitStruct.PLL.PLLQ = 4;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
@@ -171,12 +175,12 @@ void SystemClock_Config(void)
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV4;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
   {
     Error_Handler();
   }
@@ -198,11 +202,11 @@ static void MX_CAN1_Init(void)
 
   /* USER CODE END CAN1_Init 1 */
   hcan1.Instance = CAN1;
-  hcan1.Init.Prescaler = 16;
+  hcan1.Init.Prescaler = 6;
   hcan1.Init.Mode = CAN_MODE_NORMAL;
   hcan1.Init.SyncJumpWidth = CAN_SJW_1TQ;
-  hcan1.Init.TimeSeg1 = CAN_BS1_1TQ;
-  hcan1.Init.TimeSeg2 = CAN_BS2_1TQ;
+  hcan1.Init.TimeSeg1 = CAN_BS1_11TQ;
+  hcan1.Init.TimeSeg2 = CAN_BS2_2TQ;
   hcan1.Init.TimeTriggeredMode = DISABLE;
   hcan1.Init.AutoBusOff = DISABLE;
   hcan1.Init.AutoWakeUp = DISABLE;
@@ -264,35 +268,55 @@ static void MX_GPIO_Init(void)
 /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8|GPIO_PIN_9, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, Debug_LED_1_Pin|Debug_LED_2_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : PA2 PA3 */
-  GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_3;
+  /*Configure GPIO pins : Button_1_Pin Button_Spare_Pin */
+  GPIO_InitStruct.Pin = Button_1_Pin|Button_Spare_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PB0 PB1 PB10 PB11
-                           PB12 PB13 PB14 PB5
-                           PB6 PB7 */
-  GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_10|GPIO_PIN_11
-                          |GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_5
-                          |GPIO_PIN_6|GPIO_PIN_7;
+  /*Configure GPIO pins : Button_5_Pin Button_6_Pin Button_2_Pin Button_3_Pin
+                           Button_4_Pin Switch_4_Pin Switch_5_Pin Switch_1_Pin
+                           Switch_2_Pin Switch_3_Pin */
+  GPIO_InitStruct.Pin = Button_5_Pin|Button_6_Pin|Button_2_Pin|Button_3_Pin
+                          |Button_4_Pin|Switch_4_Pin|Switch_5_Pin|Switch_1_Pin
+                          |Switch_2_Pin|Switch_3_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PC8 PC9 */
-  GPIO_InitStruct.Pin = GPIO_PIN_8|GPIO_PIN_9;
+  /*Configure GPIO pins : Debug_LED_1_Pin Debug_LED_2_Pin */
+  GPIO_InitStruct.Pin = Debug_LED_1_Pin|Debug_LED_2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI1_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI2_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI2_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI3_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI3_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
@@ -303,53 +327,53 @@ void determine_action(uint16_t GPIO_Pin) {
   uint8_t button_id;
   uint8_t dial_id;
   switch (GPIO_Pin) {
-		case BUTTON_1_PIN:
+		case Button_1_Pin:
 			button_id = BUTTON_LEFT;
-      button_pressed(GPIOB, GPIO_Pin, button_id, can);
+      button_pressed(Button_1_GPIO_Port, GPIO_Pin, button_id, can);
 			break;
-		case BUTTON_2_PIN:
+		case Button_2_Pin:
 			button_id = BUTTON_RIGHT;
-      button_pressed(GPIOB, GPIO_Pin, button_id, can);
+      button_pressed(Button_2_GPIO_Port, GPIO_Pin, button_id, can);
 			break;
-		case BUTTON_3_PIN:
+		case Button_3_Pin:
 			button_id = BUTTON_ESC;
-      button_pressed(GPIOB, GPIO_Pin, button_id, can);
+      button_pressed(Button_3_GPIO_Port, GPIO_Pin, button_id, can);
 			break;
-		case BUTTON_4_PIN:
+		case Button_4_Pin:
       button_id = BUTTON_UP;
-			button_pressed(GPIOA, GPIO_Pin, button_id, can);
+			button_pressed(Button_4_GPIO_Port, GPIO_Pin, button_id, can);
 			break;
-		case BUTTON_5_PIN:
+		case Button_5_Pin:
       button_id = BUTTON_DOWN;
-			button_pressed(GPIOB, GPIO_Pin, button_id, can);
+			button_pressed(Button_5_GPIO_Port, GPIO_Pin, button_id, can);
 			break;
-		case BUTTON_6_PIN:
+		case Button_6_Pin:
       button_id = BUTTON_ENTER;
-			button_pressed(GPIOB, GPIO_Pin, button_id, can);
+			button_pressed(Button_6_GPIO_Port, GPIO_Pin, button_id, can);
 			break;
-    case SPARE_BUTTON_PIN:
+    case Button_Spare_Pin:
       button_id = SPARE_BUTTON;
-      button_pressed(GPIOA, GPIO_Pin, button_id, can);
+      button_pressed(Button_Spare_GPIO_Port, GPIO_Pin, button_id, can);
       break;
-    case SWITCH_1_PIN:
+    case Switch_1_Pin:
       dial_id = DIAL_SWITCH_1;
-      dial_switched(GPIOB, GPIO_Pin, dial_id, can);
+      dial_switched(Switch_1_GPIO_Port, GPIO_Pin, dial_id, can);
       break;
-    case SWITCH_2_PIN:
+    case Switch_2_Pin:
       dial_id = DIAL_SWITCH_2;
-      dial_switched(GPIOB, GPIO_Pin, dial_id, can);
+      dial_switched(Switch_2_GPIO_Port, GPIO_Pin, dial_id, can);
       break;
-    case SWITCH_3_PIN:
+    case Switch_3_Pin:
       dial_id = DIAL_SWITCH_3;
-      dial_switched(GPIOB, GPIO_Pin, dial_id, can);
+      dial_switched(Switch_3_GPIO_Port, GPIO_Pin, dial_id, can);
       break;
-    case SWITCH_4_PIN:
+    case Switch_4_Pin:
       dial_id = DIAL_SWITCH_4;
-      dial_switched(GPIOB, GPIO_Pin, dial_id, can);
+      dial_switched(Switch_4_GPIO_Port, GPIO_Pin, dial_id, can);
       break;
-    case SWITCH_5_PIN:
+    case Switch_5_Pin:
       dial_id = DIAL_SWITCH_5;
-      dial_switched(GPIOB, GPIO_Pin, dial_id, can);
+      dial_switched(Switch_5_GPIO_Port, GPIO_Pin, dial_id, can);
       break;
 		default:
 			break;

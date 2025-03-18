@@ -18,6 +18,5 @@ services:
         environment:
             - DEBUG_PORT=/dev/ttyACM0
             - STM_TARGET_NAME=stm32f4
-            - USBIP_PORT=1-1.3        
         
 

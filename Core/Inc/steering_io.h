@@ -46,19 +46,3 @@ void dial_switched(GPIO_TypeDef *port, uint16_t GPIO_Pin, uint8_t switch_id,
 #define DEBOUNCE_BUTTON_ON   0 // 0 for off, 1 for on
 #define DEBOUNCE_DIAL_TIME   8 // unit is ms
 #define DEBOUNCE_DIAL_ON     0 // 0 for off, 1 for on
-
-/* Button Pins */
-#define BUTTON_1_PIN	 GPIO_PIN_2 // PB2
-#define BUTTON_2_PIN	 GPIO_PIN_10 // PB10
-#define BUTTON_3_PIN	 GPIO_PIN_11 // PB11
-#define BUTTON_4_PIN	 GPIO_PIN_4 // PA4
-#define BUTTON_5_PIN	 GPIO_PIN_0 // PB0
-#define BUTTON_6_PIN	 GPIO_PIN_1 // PB1
-#define SPARE_BUTTON_PIN GPIO_PIN_3 // PA3
-
-/* Dial Switch Pins */
-#define SWITCH_1_PIN GPIO_PIN_5 // PB5
-#define SWITCH_2_PIN GPIO_PIN_6 // PB6
-#define SWITCH_3_PIN GPIO_PIN_7 // PB7
-#define SWITCH_4_PIN GPIO_PIN_8 // PB8
-#define SWITCH_5_PIN GPIO_PIN_9 // PB9
