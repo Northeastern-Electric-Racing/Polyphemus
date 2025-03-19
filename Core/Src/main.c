@@ -123,6 +123,9 @@ int main(void)
   MX_CAN1_Init();
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
+  can = malloc(sizeof(can_t));
+  can->hcan = &hcan1;
+  can_init(can);
 
   /* USER CODE END 2 */
 
