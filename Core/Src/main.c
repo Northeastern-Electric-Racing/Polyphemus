@@ -139,7 +139,7 @@ int main(void)
       determine_action(gpio_pin);
     }
     switch_state = which_pin();
-    printf("CURRENT SWITCH STATE: %d",switch_state);
+    printf("CURRENT SWITCH STATE: %d \n",switch_state);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
