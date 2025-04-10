@@ -36,6 +36,7 @@
 /* USER CODE BEGIN PD */
 volatile uint8_t flag;
 volatile uint16_t gpio_pin;
+volatile int switch_state = -1;
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -136,6 +137,8 @@ int main(void)
     if(flag) {
       flag = 0;
       determine_action(gpio_pin);
+      switch_state = which_pin();
+      printf("CURRENT SWITCH STATE: %d",switch_state);
     }
     /* USER CODE END WHILE */
 
