@@ -1,5 +1,8 @@
 {
     "files.associations": {
-        "steering_io.h": "c"
+        "steering_io.h": "c",
+        "buttons.h": "c",
+        "stdlib.h": "c",
+        "string.h": "c"
     }
 }

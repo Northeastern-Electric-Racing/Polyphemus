@@ -24,7 +24,8 @@
 #include "can.h"
 #include <stdlib.h>
 #include <string.h>
-#include "steering_io.c"
+#include "buttons.c"
+#include "dial.c"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -36,7 +37,6 @@
 /* USER CODE BEGIN PD */
 volatile uint8_t flag;
 volatile uint16_t gpio_pin;
-volatile int switch_state = -1;
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -128,6 +128,8 @@ int main(void)
   can->hcan = &hcan1;
   can_init(can);
 
+  check_dial_status(can); // Check what setting the dial is set to on startup
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -138,8 +140,10 @@ int main(void)
       flag = 0;
       determine_action(gpio_pin);
     }
-    switch_state = which_pin();
-    printf("CURRENT SWITCH STATE: %d \n",switch_state);
+
+    if(dial_timer()) {
+      check_dial_status(can); // Every DIAL_FREQUENCY ms (defined in dial.h), check the dial status and send it over CAN.
+    }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -331,7 +335,6 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 void determine_action(uint16_t GPIO_Pin) {
   uint8_t button_id;
-  uint8_t dial_id;
   switch (GPIO_Pin) {
 		case Button_1_Pin:
 			button_id = BUTTON_LEFT;
@@ -360,26 +363,6 @@ void determine_action(uint16_t GPIO_Pin) {
     case Button_Spare_Pin:
       button_id = SPARE_BUTTON;
       button_pressed(Button_Spare_GPIO_Port, GPIO_Pin, button_id, can);
-      break;
-    case Switch_1_Pin:
-      dial_id = DIAL_SWITCH_1;
-      dial_switched(Switch_1_GPIO_Port, GPIO_Pin, dial_id, can);
-      break;
-    case Switch_2_Pin:
-      dial_id = DIAL_SWITCH_2;
-      dial_switched(Switch_2_GPIO_Port, GPIO_Pin, dial_id, can);
-      break;
-    case Switch_3_Pin:
-      dial_id = DIAL_SWITCH_3;
-      dial_switched(Switch_3_GPIO_Port, GPIO_Pin, dial_id, can);
-      break;
-    case Switch_4_Pin:
-      dial_id = DIAL_SWITCH_4;
-      dial_switched(Switch_4_GPIO_Port, GPIO_Pin, dial_id, can);
-      break;
-    case Switch_5_Pin:
-      dial_id = DIAL_SWITCH_5;
-      dial_switched(Switch_5_GPIO_Port, GPIO_Pin, dial_id, can);
       break;
 		default:
 			break;
