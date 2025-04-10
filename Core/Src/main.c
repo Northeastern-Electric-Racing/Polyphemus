@@ -137,9 +137,9 @@ int main(void)
     if(flag) {
       flag = 0;
       determine_action(gpio_pin);
-      switch_state = which_pin();
-      printf("CURRENT SWITCH STATE: %d",switch_state);
     }
+    switch_state = which_pin();
+    printf("CURRENT SWITCH STATE: %d",switch_state);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
