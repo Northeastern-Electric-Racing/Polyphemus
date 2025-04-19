@@ -279,17 +279,17 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOC, Debug_LED_1_Pin|Debug_LED_2_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : Button_1_Pin Button_Spare_Pin */
-  GPIO_InitStruct.Pin = Button_1_Pin|Button_Spare_Pin;
+  /*Configure GPIO pins : Button_1_Pin Button_4_Pin */
+  GPIO_InitStruct.Pin = Button_1_Pin|Button_4_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : Button_5_Pin Button_6_Pin Button_2_Pin Button_3_Pin
-                           Button_4_Pin Switch_4_Pin Switch_5_Pin Switch_1_Pin
+  /*Configure GPIO pins : Button_6_Pin Button_5_Pin Button_2_Pin Button_3_Pin
+                           Button_Spare_Pin Switch_4_Pin Switch_5_Pin Switch_1_Pin
                            Switch_2_Pin Switch_3_Pin */
-  GPIO_InitStruct.Pin = Button_5_Pin|Button_6_Pin|Button_2_Pin|Button_3_Pin
-                          |Button_4_Pin|Switch_4_Pin|Switch_5_Pin|Switch_1_Pin
+  GPIO_InitStruct.Pin = Button_6_Pin|Button_5_Pin|Button_2_Pin|Button_3_Pin
+                          |Button_Spare_Pin|Switch_4_Pin|Switch_5_Pin|Switch_1_Pin
                           |Switch_2_Pin|Switch_3_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
