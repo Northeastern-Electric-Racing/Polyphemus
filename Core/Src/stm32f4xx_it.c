@@ -220,7 +220,7 @@ void EXTI1_IRQHandler(void)
   /* USER CODE BEGIN EXTI1_IRQn 0 */
 
   /* USER CODE END EXTI1_IRQn 0 */
-  HAL_GPIO_EXTI_IRQHandler(Button_6_Pin);
+  HAL_GPIO_EXTI_IRQHandler(Button_4_Pin);
   /* USER CODE BEGIN EXTI1_IRQn 1 */
 
   /* USER CODE END EXTI1_IRQn 1 */
@@ -280,7 +280,7 @@ void EXTI15_10_IRQHandler(void)
   /* USER CODE END EXTI15_10_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(Button_2_Pin);
   HAL_GPIO_EXTI_IRQHandler(Button_3_Pin);
-  HAL_GPIO_EXTI_IRQHandler(Button_4_Pin);
+  HAL_GPIO_EXTI_IRQHandler(Button_6_Pin);
   HAL_GPIO_EXTI_IRQHandler(Switch_4_Pin);
   HAL_GPIO_EXTI_IRQHandler(Switch_5_Pin);
   /* USER CODE BEGIN EXTI15_10_IRQn 1 */
