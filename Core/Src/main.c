@@ -281,22 +281,16 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pins : Button_1_Pin Button_Spare_Pin */
   GPIO_InitStruct.Pin = Button_1_Pin|Button_Spare_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : Button_5_Pin Button_4_Pin Button_2_Pin Button_3_Pin
-                           Button_6_Pin */
-  GPIO_InitStruct.Pin = Button_5_Pin|Button_4_Pin|Button_2_Pin|Button_3_Pin
-                          |Button_6_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : Switch_4_Pin Switch_5_Pin Switch_1_Pin Switch_2_Pin
-                           Switch_3_Pin */
-  GPIO_InitStruct.Pin = Switch_4_Pin|Switch_5_Pin|Switch_1_Pin|Switch_2_Pin
-                          |Switch_3_Pin;
+  /*Configure GPIO pins : Button_5_Pin Button_6_Pin Button_2_Pin Button_3_Pin
+                           Button_4_Pin Switch_4_Pin Switch_5_Pin Switch_1_Pin
+                           Switch_2_Pin Switch_3_Pin */
+  GPIO_InitStruct.Pin = Button_5_Pin|Button_6_Pin|Button_2_Pin|Button_3_Pin
+                          |Button_4_Pin|Switch_4_Pin|Switch_5_Pin|Switch_1_Pin
+                          |Switch_2_Pin|Switch_3_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
