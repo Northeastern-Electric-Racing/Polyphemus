@@ -133,10 +133,16 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    if(flag) {
+    if (flag) {
       flag = 0;
       determine_action(gpio_pin);
     }
+    
+    uint32_t tick = HAL_GetTick();
+    if (tick % 500 == 0) {
+      printf(".\n", tick);
+    }
+    
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
